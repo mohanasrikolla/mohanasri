@@ -4,12 +4,15 @@ import "./App.css";
 
 function App() {
 
-const [ingredient,setIngredient] = useState("");
-const [recipes,setRecipes] = useState([]);
+const [ingredient, setIngredient] = useState("");
+const [recipes, setRecipes] = useState([]);
+const [searched, setSearched] = useState(false);
 
 const searchRecipes = async () => {
 
-if(!ingredient) return;
+if (ingredient.trim() === "") return;
+
+setSearched(true);
 
 const response = await fetch(
 `https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`
@@ -18,6 +21,7 @@ const response = await fetch(
 const data = await response.json();
 
 setRecipes(data.meals || []);
+
 };
 
 return (
@@ -41,9 +45,10 @@ Search
 
 </div>
 
-{recipes.length === 0 && ingredient !== "" &&
+{/* show message ONLY after search */}
+{searched && recipes.length === 0 && (
 <p className="noResult">No recipes found</p>
-}
+)}
 
 <div className="recipes">
 
@@ -56,6 +61,7 @@ Search
 </div>
 
 );
+
 }
 
 export default App;
